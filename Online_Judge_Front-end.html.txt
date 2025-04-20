@@ -129,7 +129,7 @@
     </main>
 
     <footer class="footer">
-        <p>Developed by Siam & Jion</p>
+        <p>Developed by Siam & F.F Jion</p>
     </footer>
 
     
