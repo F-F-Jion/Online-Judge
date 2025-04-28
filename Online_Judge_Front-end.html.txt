@@ -6,13 +6,15 @@
     <meta name="description" content="Online Judge Platform for coding challenges and competitions">
     <title>Online Judge Platform</title>
     <style>
-        
         :root {
             --primary-color: #ffcc00;
             --secondary-color: #ff6f61;
             --background-dark: #1e2a47;
             --background-light: #2b3a56;
             --text-light: #ffffff;
+            --nav-bg: #111111;
+            --success-green: #4CAF50;
+            --error-red: #f44336;
         }
 
         * {
@@ -30,9 +32,11 @@
             position: relative;
         }
 
+        /* Navigation Styles */
         .navbar {
-            background-color: var(--background-dark);
+            background-color: var(--nav-bg);
             padding: 1rem 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -48,6 +52,7 @@
             font-size: 2rem;
             color: var(--primary-color);
             text-align: center;
+            margin-bottom: 1rem;
         }
 
         .navbar__list {
@@ -61,15 +66,20 @@
             text-decoration: none;
             color: var(--text-light);
             padding: 0.75rem 1.5rem;
-            background-color: rgba(255, 255, 255, 0.1);
             border-radius: 2rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
 
-        .navbar__link:hover {
+        .navbar__link:hover,
+        .navbar__link[aria-current] {
             background-color: var(--primary-color);
-            color: var(--background-dark);
+            color: var(--nav-bg);
+            transform: translateY(-2px);
         }
 
+        /* Main Content Sections */
         .main-content {
             max-width: 1200px;
             margin: 2rem auto;
@@ -81,6 +91,11 @@
             border-radius: 1rem;
             padding: 2rem;
             margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .section--hidden {
+            display: none;
         }
 
         .section__title {
@@ -89,12 +104,123 @@
             font-size: 2rem;
         }
 
+        /* Code Editor Styles */
+        .code-editor {
+            width: 100%;
+            height: 300px;
+            margin: 1.5rem 0;
+            background: var(--background-light);
+            border: 2px solid var(--secondary-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            color: var(--text-light);
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+        }
+
+        /* Button Styles */
+        .button {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* List Styles */
+        .list {
+            list-style: none;
+        }
+
+        .list__item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .status-message--success {
+            background-color: var(--success-green);
+            display: block;
+        }
+
+        .status-message--error {
+            background-color: var(--error-red);
+            display: block;
+        }
+
+        /* Footer Styles */
         .footer {
             text-align: center;
             padding: 1rem;
             position: sticky;
             bottom: 0;
-            background: var(--background-dark);
+            background: var(--nav-bg);
+            z-index: 500;
+        }
+
+        .developer-credit {
+            color: var(--primary-color);
+            font-size: 0.875rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--text-light);
+            animation: spin 1s ease-in-out infinite;
+            display: none;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar__list {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .navbar__link {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .code-editor {
+                height: 200px;
+            }
         }
     </style>
 </head>
@@ -104,7 +230,9 @@
             <h1 class="navbar__title">Online Judge</h1>
             <ul class="navbar__list">
                 <li><a href="#home" class="navbar__link" aria-current="page" onclick="showPage('home')">Home</a></li>
+                <li><a href="#problems" class="navbar__link" onclick="showPage('problems')">Problems</a></li>
                 <li><a href="#submit" class="navbar__link" onclick="showPage('submit')">Submit</a></li>
+                <li><a href="#leaderboard" class="navbar__link" onclick="showPage('leaderboard')">Leaderboard</a></li>
             </ul>
         </div>
     </nav>
@@ -112,11 +240,19 @@
     <main class="main-content">
         <section id="home" class="section">
             <h2 class="section__title">Welcome to Online Judge</h2>
-            <p>Enhance your coding skills through challenging problems!</p>
+            <p>Enhance your coding skills through challenging problems and compete with developers worldwide!</p>
+        </section>
+
+        <section id="problems" class="section section--hidden">
+            <h2 class="section__title">Problem Set</h2>
+            <ul class="list" id="problem-list" role="list">
+                <!-- Problems will be dynamically loaded here -->
+            </ul>
         </section>
 
         <section id="submit" class="section section--hidden">
             <h2 class="section__title">Code Submission</h2>
+            <div class="status-message" id="status-message" role="alert"></div>
             <textarea 
                 class="code-editor"
                 id="code-area"
@@ -125,13 +261,126 @@
                 aria-label="Code editor"
             ></textarea>
             <button class="button" onclick="submitCode()" aria-label="Submit code">Submit Solution</button>
+            <div class="spinner" id="spinner"></div>
+        </section>
+
+        <section id="leaderboard" class="section section--hidden">
+            <h2 class="section__title">Leaderboard</h2>
+            <ul class="list" id="leaderboard-list" role="list">
+                <!-- Leaderboard entries will be dynamically loaded here -->
+            </ul>
         </section>
     </main>
 
     <footer class="footer">
-        <p>Developed by Siam & F.F Jion</p>
+        <p class="developer-credit">Developed by Siam & Jion</p>
     </footer>
 
-    
+    <script>
+        const API_BASE_URL = 'https://your-backend-api.com/v1';
+        const sections = {
+            home: document.getElementById('home'),
+            problems: document.getElementById('problems'),
+            submit: document.getElementById('submit'),
+            leaderboard: document.getElementById('leaderboard')
+        };
+
+        function showPage(pageId) {
+            event.preventDefault();
+            // Update active navigation link
+            document.querySelectorAll('.navbar__link').forEach(link => {
+                link.setAttribute('aria-current', link.href.endsWith(pageId) ? 'page' : 'false');
+            });
+            
+            // Toggle section visibility
+            Object.values(sections).forEach(section => {
+                section.classList.toggle('section--hidden', section.id !== pageId);
+            });
+        }
+
+        async function fetchWithErrorHandling(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+                console.error('Fetch error:', error);
+                return null;
+            }
+        }
+
+        async function fetchProblems() {
+            toggleSpinner(true);
+            const problems = await fetchWithErrorHandling(`${API_BASE_URL}/problems`);
+            if (!problems) return;
+
+            const problemList = document.getElementById('problem-list');
+            problemList.innerHTML = problems.map(problem => `
+                <li class="list__item" role="listitem">
+                    <span>${problem.title} - <em>${problem.difficulty}</em></span>
+                    <button class="button button--small" onclick="viewProblem('${problem.id}')">View</button>
+                </li>
+            `).join('');
+            toggleSpinner(false);
+        }
+
+        async function fetchLeaderboard() {
+            toggleSpinner(true);
+            const leaderboard = await fetchWithErrorHandling(`${API_BASE_URL}/leaderboard`);
+            if (!leaderboard) return;
+
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = leaderboard.map((user, index) => `
+                <li class="list__item" role="listitem">
+                    <span>${index + 1}. ${user.username}</span>
+                    <span>${user.score} points</span>
+                </li>
+            `).join('');
+            toggleSpinner(false);
+        }
+
+        async function submitCode() {
+            const code = document.getElementById('code-area').value.trim();
+            if (!code) return showMessage('Please enter some code before submitting.', 'error');
+
+            toggleSpinner(true);
+            try {
+                const response = await fetch(`${API_BASE_URL}/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+                
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || 'Submission failed');
+                
+                showMessage(result.message, 'success');
+                document.getElementById('code-area').value = '';
+            } catch (error) {
+                showMessage(error.message, 'error');
+            } finally {
+                toggleSpinner(false);
+            }
+        }
+
+        function showMessage(message, type = 'info') {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-message--${type}`;
+            setTimeout(() => statusEl.classList.remove('status-message--success', 'status-message--error'), 5000);
+        }
+
+        function toggleSpinner(show) {
+            document.getElementById('spinner').style.display = show ? 'block' : 'none';
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProblems();
+            fetchLeaderboard();
+            showPage('home');
+        });
+    </script>
 </body>
 </html>
