@@ -3,383 +3,1160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Online Judge Platform for coding challenges and competitions">
-    <title>Online Judge Platform</title>
+    <title>Online Judge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #ffcc00;
-            --secondary-color: #ff6f61;
-            --background-dark: #1e2a47;
-            --background-light: #2b3a56;
-            --text-light: #ffffff;
-            --nav-bg: #111111;
-            --success-green: #4CAF50;
-            --error-red: #f44336;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #0f172a;
+            --border-color: #e2e8f0;
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(45deg, var(--background-dark), var(--background-light));
-            color: var(--text-light);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
-            min-height: 100vh;
-            position: relative;
         }
 
-        /* Navigation Styles */
         .navbar {
-            background-color: var(--nav-bg);
-            padding: 1rem 0;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background-color: var(--dark);
+            color: var(--light);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
         }
 
-        .navbar__content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
+        .navbar__brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--light);
+            text-decoration: none;
         }
 
-        .navbar__title {
-            font-size: 2rem;
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 1rem;
+        .navbar__brand-icon {
+            color: var(--primary);
+            font-size: 1.8rem;
         }
 
         .navbar__list {
             display: flex;
-            justify-content: center;
-            gap: 1.5rem;
+            gap: 1rem;
             list-style: none;
         }
 
         .navbar__link {
+            color: var(--light);
             text-decoration: none;
-            color: var(--text-light);
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
             font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
         }
 
-        .navbar__link:hover,
-        .navbar__link[aria-current] {
-            background-color: var(--primary-color);
-            color: var(--nav-bg);
-            transform: translateY(-2px);
+        .navbar__link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* Main Content Sections */
-        .main-content {
+        .navbar__link--active {
+            background-color: var(--primary);
+        }
+
+        .navbar__link--hidden {
+            display: none;
+        }
+
+        .navbar__user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar__avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+        }
+
+        .container {
             max-width: 1200px;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             padding: 0 1.5rem;
         }
 
         .section {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 1rem;
-            padding: 2rem;
-            margin: 2rem 0;
-            backdrop-filter: blur(10px);
+            display: none;
+            animation: fadeIn 0.3s ease;
         }
 
-        .section--hidden {
-            display: none;
+        .section--visible {
+            display: block;
+        }
+
+        .section__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
 
         .section__title {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--dark);
         }
 
-        /* Code Editor Styles */
-        .code-editor {
-            width: 100%;
-            height: 300px;
-            margin: 1.5rem 0;
-            background: var(--background-light);
-            border: 2px solid var(--secondary-color);
+        .card {
+            background-color: var(--card-bg);
             border-radius: 0.5rem;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            resize: vertical;
-            color: var(--text-light);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-color);
         }
 
-        .code-editor:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
-        }
-
-        /* Button Styles */
-        .button {
-            background-color: var(--secondary-color);
-            color: var(--text-light);
-            padding: 0.75rem 2rem;
-            border: none;
-            border-radius: 2rem;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
             cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            border: none;
+            font-size: 0.9rem;
         }
 
-        .button:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .btn--primary {
+            background-color: var(--primary);
+            color: white;
         }
 
-        /* List Styles */
-        .list {
-            list-style: none;
+        .btn--primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
-        .list__item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            margin: 0.75rem 0;
+        .btn--outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn--outline:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .profile {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .profile__sidebar {
+            flex: 0 0 220px;
+        }
+
+        .profile__main {
+            flex: 1;
+        }
+
+        .profile__card {
+            text-align: center;
+            padding: 1.25rem;
+        }
+
+        .profile__avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin: 0 auto 1rem;
+        }
+
+        .profile__name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile__username {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .profile__stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.25rem 0;
+        }
+
+        .profile__stat {
+            text-align: center;
+        }
+
+        .profile__stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .profile__stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .problems-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .problems-table th, 
+        .problems-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .problems-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .problems-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .problem__id {
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .problem__title {
+            font-weight: 500;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .problem__title:hover {
+            text-decoration: underline;
+        }
+
+        .problem__difficulty {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .problem__difficulty--easy {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .problem__difficulty--medium {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .problem__difficulty--hard {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .editor-container {
+            border: 1px solid var(--border-color);
             border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .editor-toolbar {
+            background-color: #f8fafc;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* Status Messages */
-        .status-message {
+        .editor-language {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            border: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            background-color: white;
+        }
+
+        #code-editor {
+            width: 100%;
+            min-height: 300px;
+            padding: 0.75rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            border: none;
+            resize: vertical;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .leaderboard-table th, 
+        .leaderboard-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .leaderboard-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .leaderboard-rank {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .leaderboard-user {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .leaderboard-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
             padding: 1rem;
             border-radius: 0.5rem;
-            margin: 1rem 0;
-            display: none;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
         }
 
-        .status-message--success {
-            background-color: var(--success-green);
-            display: block;
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
         }
 
-        .status-message--error {
-            background-color: var(--error-red);
-            display: block;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Footer Styles */
-        .footer {
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-success {
+            color: var(--success);
+        }
+
+        .text-danger {
+            color: var(--danger);
+        }
+
+        .text-warning {
+            color: var(--warning);
+        }
+
+        .text-center {
             text-align: center;
-            padding: 1rem;
-            position: sticky;
-            bottom: 0;
-            background: var(--nav-bg);
-            z-index: 500;
         }
 
-        .developer-credit {
-            color: var(--primary-color);
-            font-size: 0.875rem;
-        }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-3 { margin-top: 1rem; }
+        .mt-4 { margin-top: 1.5rem; }
+        
+        .mb-1 { margin-bottom: 0.25rem; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-3 { margin-bottom: 1rem; }
+        .mb-4 { margin-bottom: 1.5rem; }
 
-        /* Loading Spinner */
-        .spinner {
-            width: 2rem;
-            height: 2rem;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--text-light);
-            animation: spin 1s ease-in-out infinite;
-            display: none;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .navbar__list {
-                flex-wrap: wrap;
-                gap: 0.75rem;
-            }
-
-            .navbar__link {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            .code-editor {
-                height: 200px;
-            }
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
-    <nav class="navbar" aria-label="Main navigation">
-        <div class="navbar__content">
-            <h1 class="navbar__title">Online Judge</h1>
-            <ul class="navbar__list">
-                <li><a href="#home" class="navbar__link" aria-current="page" onclick="showPage('home')">Home</a></li>
-                <li><a href="#problems" class="navbar__link" onclick="showPage('problems')">Problems</a></li>
-                <li><a href="#submit" class="navbar__link" onclick="showPage('submit')">Submit</a></li>
-                <li><a href="#leaderboard" class="navbar__link" onclick="showPage('leaderboard')">Leaderboard</a></li>
-            </ul>
-        </div>
+    <nav class="navbar">
+        <a href="#" class="navbar__brand" onclick="navigate('home')">
+            <i class="fas fa-code navbar__brand-icon"></i>
+            <span>Online Judge</span>
+        </a>
+        <ul class="navbar__list">
+            <li><a href="#" class="navbar__link" onclick="navigate('home')"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#" class="navbar__link" onclick="navigate('problems')"><i class="fas fa-tasks"></i> Problems</a></li>
+            <li><a href="#" class="navbar__link" onclick="navigate('submit')"><i class="fas fa-upload"></i> Submit</a></li>
+            <li><a href="#" class="navbar__link" onclick="navigate('leaderboard')"><i class="fas fa-trophy"></i> Leaderboard</a></li>
+            <li><a href="#" class="navbar__link" id="loginLink" onclick="navigate('login')"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li class="navbar__user">
+                <img src="https://via.placeholder.com/150" class="navbar__avatar hidden" id="navbarAvatar" onclick="navigate('profile')">
+                <a href="#" class="navbar__link hidden" id="logoutLink" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </li>
+        </ul>
     </nav>
 
-    <main class="main-content">
-        <section id="home" class="section">
-            <h2 class="section__title">Welcome to Online Judge</h2>
-            <p>Enhance your coding skills through challenging problems and compete with developers worldwide!</p>
+    <div class="container">
+        <section id="home" class="section section--visible">
+            <div class="section__header">
+                <h1 class="section__title">Welcome to Online Judge</h1>
+                <button class="btn btn--primary" onclick="navigate('problems')">Start Solving</button>
+            </div>
+            <div class="card">
+                <h2 class="mb-3">Sharpen your coding skills</h2>
+                <p class="mb-3">Solve programming challenges, compete with others, and improve your problem-solving abilities.</p>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-laptop-code"></i></div>
+                        <h3 class="mb-1">Practice Problems</h3>
+                        <p>Solve problems across multiple difficulty levels.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                        <h3 class="mb-1">Compete</h3>
+                        <p>Climb the leaderboard by solving problems.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3 class="mb-1">Track Progress</h3>
+                        <p>Monitor your improvement with statistics.</p>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section id="problems" class="section section--hidden">
-            <h2 class="section__title">Problem Set</h2>
-            <ul class="list" id="problem-list" role="list">
-                <!-- Problems will be dynamically loaded here -->
-            </ul>
+        <section id="login" class="section">
+            <div class="section__header">
+                <h1 class="section__title">Login to Your Account</h1>
+                <button class="btn btn--outline" onclick="navigate('home')">Back to Home</button>
+            </div>
+            <div class="card">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="username" class="form-label">Username or Email</label>
+                        <input type="text" id="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn--primary">Login</button>
+                        <button type="button" class="btn btn--outline" onclick="navigate('home')">Cancel</button>
+                    </div>
+                    <p class="text-center mt-3">New here? <a href="#" onclick="navigate('register')" class="text-primary">Create an account</a></p>
+                </form>
+            </div>
         </section>
 
-        <section id="submit" class="section section--hidden">
-            <h2 class="section__title">Code Submission</h2>
-            <div class="status-message" id="status-message" role="alert"></div>
-            <textarea 
-                class="code-editor"
-                id="code-area"
-                placeholder="Enter your code here..."
-                spellcheck="false"
-                aria-label="Code editor"
-            ></textarea>
-            <button class="button" onclick="submitCode()" aria-label="Submit code">Submit Solution</button>
-            <div class="spinner" id="spinner"></div>
+        <section id="register" class="section">
+            <div class="section__header">
+                <h1 class="section__title">Create an Account</h1>
+                <button class="btn btn--outline" onclick="navigate('home')">Back to Home</button>
+            </div>
+            <div class="card">
+                <form id="registerForm" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="reg-username" class="form-label">Username</label>
+                        <input type="text" id="reg-username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email" class="form-label">Email</label>
+                        <input type="email" id="reg-email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-password" class="form-label">Password</label>
+                        <input type="password" id="reg-password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-confirm-password" class="form-label">Confirm Password</label>
+                        <input type="password" id="reg-confirm-password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn--primary">Register</button>
+                        <button type="button" class="btn btn--outline" onclick="navigate('login')">Already have an account?</button>
+                    </div>
+                </form>
+            </div>
         </section>
 
-        <section id="leaderboard" class="section section--hidden">
-            <h2 class="section__title">Leaderboard</h2>
-            <ul class="list" id="leaderboard-list" role="list">
-                <!-- Leaderboard entries will be dynamically loaded here -->
-            </ul>
+        <section id="profile" class="section">
+            <div class="section__header">
+                <h1 class="section__title">Your Profile</h1>
+                <button class="btn btn--outline" onclick="navigate('home')">Back to Home</button>
+            </div>
+            <div class="profile">
+                <div class="profile__sidebar">
+                    <div class="card profile__card">
+                        <img src="https://via.placeholder.com/150" class="profile__avatar" id="profileAvatar">
+                        <h3 class="profile__name" id="profileName">John Doe</h3>
+                        <p class="profile__username" id="profileUsername">@johndoe</p>
+                        <div class="profile__stats">
+                            <div class="profile__stat">
+                                <div class="profile__stat-value" id="solvedCount">0</div>
+                                <div class="profile__stat-label">Solved</div>
+                            </div>
+                            <div class="profile__stat">
+                                <div class="profile__stat-value" id="rank">#0</div>
+                                <div class="profile__stat-label">Rank</div>
+                            </div>
+                        </div>
+                        <input type="file" id="avatarUpload" accept="image/*" onchange="uploadAvatar(event)" style="display: none;">
+                        <button class="btn btn--outline" onclick="document.getElementById('avatarUpload').click()">Change Avatar</button>
+                    </div>
+                </div>
+                <div class="profile__main">
+                    <div class="card">
+                        <h2 class="mb-3">About</h2>
+                        <p id="profileBio">Tell us about yourself...</p>
+                        <textarea id="bioEditor" class="form-control form-textarea mt-3 hidden"></textarea>
+                        <button class="btn btn--outline mt-2" id="editBioBtn" onclick="toggleBioEdit()">Edit Bio</button>
+                        <button class="btn btn--primary mt-2 hidden" id="saveBioBtn" onclick="saveBio()">Save Bio</button>
+                    </div>
+                    <div class="card mt-3">
+                        <h2 class="mb-3">Recent Submissions</h2>
+                        <table class="problems-table">
+                            <thead>
+                                <tr>
+                                    <th>Problem</th>
+                                    <th>Status</th>
+                                    <th>Language</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submissionsList">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </section>
-    </main>
 
-    <footer class="footer">
-        <p class="developer-credit">Developed by Siam & Jion</p>
-    </footer>
+        <section id="problems" class="section">
+            <div class="section__header">
+                <h1 class="section__title">Problem Set</h1>
+                <div>
+                    <input type="text" class="form-control" placeholder="Search problems..." id="problemSearch" style="width: 300px;">
+                </div>
+            </div>
+            <div class="card">
+                <table class="problems-table">
+                    <thead>
+                        <tr>
+                            <th width="5%">ID</th>
+                            <th width="45%">Title</th>
+                            <th width="20%">Difficulty</th>
+                            <th width="15%">Acceptance</th>
+                            <th width="15%">Solved</th>
+                        </tr>
+                    </thead>
+                    <tbody id="problemsList">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="submit" class="section">
+            <div class="section__header">
+                <h1 class="section__title">Submit Solution</h1>
+                <button class="btn btn--outline" onclick="navigate('problems')">View Problems</button>
+            </div>
+            <div class="card">
+                <div class="form-group">
+                    <label for="problemSelect" class="form-label">Select Problem</label>
+                    <select id="problemSelect" class="form-control">
+                        <option value="">-- Select a problem --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="languageSelect" class="form-label">Programming Language</label>
+                    <select id="languageSelect" class="form-control">
+                        <option value="cpp">C++</option>
+                        <option value="java">Java</option>
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                    </select>
+                </div>
+                <div class="editor-container">
+                    <div class="editor-toolbar">
+                        <div>
+                            <span id="editorProblemTitle">No problem selected</span>
+                        </div>
+                        <div>
+                            <select class="editor-language" id="editorLanguage">
+                                <option value="cpp">C++</option>
+                                <option value="java">Java</option>
+                                <option value="python">Python</option>
+                                <option value="javascript">JavaScript</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea id="code-editor" placeholder="Write your code here..."></textarea>
+                </div>
+                <div class="form-group mt-3">
+                    <button class="btn btn--primary" onclick="submitSolution()">Submit Solution</button>
+                    <button class="btn btn--outline" onclick="clearEditor()">Clear</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="leaderboard" class="section">
+            <div class="section__header">
+                <h1 class="section__title">Leaderboard</h1>
+                <div>
+                    <select id="leaderboardFilter" class="form-control" onchange="updateLeaderboard()">
+                        <option value="all">All Users</option>
+                        <option value="month">This Month</option>
+                        <option value="week">This Week</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th width="10%">Rank</th>
+                            <th width="50%">User</th>
+                            <th width="20%">Solved</th>
+                            <th width="20%">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardList">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 
     <script>
-        const API_BASE_URL = 'https://your-backend-api.com/v1';
-        const sections = {
-            home: document.getElementById('home'),
-            problems: document.getElementById('problems'),
-            submit: document.getElementById('submit'),
-            leaderboard: document.getElementById('leaderboard')
+        const state = {
+            currentUser: null,
+            users: [],
+            problems: [
+                { id: 1, title: "Two Sum", difficulty: "easy", acceptance: "72%", solved: false },
+                { id: 2, title: "Add Two Numbers", difficulty: "medium", acceptance: "65%", solved: false },
+                { id: 3, title: "Longest Substring Without Repeating Characters", difficulty: "medium", acceptance: "58%", solved: false },
+                { id: 4, title: "Median of Two Sorted Arrays", difficulty: "hard", acceptance: "42%", solved: false },
+                { id: 5, title: "Longest Palindromic Substring", difficulty: "medium", acceptance: "53%", solved: false }
+            ],
+            submissions: [],
+            leaderboard: []
         };
 
-        function showPage(pageId) {
-            event.preventDefault();
-            // Update active navigation link
-            document.querySelectorAll('.navbar__link').forEach(link => {
-                link.setAttribute('aria-current', link.href.endsWith(pageId) ? 'page' : 'false');
+        const sections = ['home', 'login', 'register', 'profile', 'problems', 'submit', 'leaderboard'];
+        const loginLink = document.getElementById('loginLink');
+        const logoutLink = document.getElementById('logoutLink');
+        const navbarAvatar = document.getElementById('navbarAvatar');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileName = document.getElementById('profileName');
+        const profileUsername = document.getElementById('profileUsername');
+        const solvedCount = document.getElementById('solvedCount');
+        const rank = document.getElementById('rank');
+        const profileBio = document.getElementById('profileBio');
+        const bioEditor = document.getElementById('bioEditor');
+        const editBioBtn = document.getElementById('editBioBtn');
+        const saveBioBtn = document.getElementById('saveBioBtn');
+        const submissionsList = document.getElementById('submissionsList');
+        const problemsList = document.getElementById('problemsList');
+        const problemSelect = document.getElementById('problemSelect');
+        const editorProblemTitle = document.getElementById('editorProblemTitle');
+        const leaderboardList = document.getElementById('leaderboardList');
+        const problemSearch = document.getElementById('problemSearch');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProblems();
+            populateProblemSelect();
+            updateLeaderboard();
+            
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                state.currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            }
+        });
+
+        function navigate(sectionId) {
+            if (!state.currentUser && (sectionId === 'profile' || sectionId === 'submit')) {
+                alert('Please login first');
+                sectionId = 'login';
+            }
+            
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.toggle('section--visible', id === sectionId);
             });
             
-            // Toggle section visibility
-            Object.values(sections).forEach(section => {
-                section.classList.toggle('section--hidden', section.id !== pageId);
+            document.querySelectorAll('.navbar__link').forEach(link => {
+                link.classList.remove('navbar__link--active');
+            });
+            
+            if (sectionId !== 'register') {
+                const activeLink = document.querySelector(`.navbar__link[onclick="navigate('${sectionId}')"]`);
+                if (activeLink) activeLink.classList.add('navbar__link--active');
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                alert('Please enter both username and password.');
+                return;
+            }
+            
+            const user = state.users.find(u => 
+                (u.username === username || u.email === username) && u.password === password
+            );
+            
+            if (user) {
+                state.currentUser = {...user};
+                localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+                updateAuthUI();
+                navigate('profile');
+                alert(`Welcome back, ${state.currentUser.name}!`);
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            const confirmPassword = document.getElementById('reg-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                return;
+            }
+            
+            if (state.users.some(u => u.username === username)) {
+                alert('Username already exists');
+                return;
+            }
+            
+            if (state.users.some(u => u.email === email)) {
+                alert('Email already registered');
+                return;
+            }
+            
+            const newUser = {
+                username,
+                name: username.charAt(0).toUpperCase() + username.slice(1),
+                email,
+                password,
+                solved: 0,
+                rank: state.users.length + 1,
+                bio: "New user",
+                avatar: `https://ui-avatars.com/api/?name=${username}&background=2563eb&color=fff`
+            };
+            
+            state.users.push(newUser);
+            state.currentUser = {...newUser};
+            localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+            updateAuthUI();
+            updateLeaderboard();
+            navigate('profile');
+            alert('Registration successful! Welcome to Online Judge.');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                state.currentUser = null;
+                localStorage.removeItem('currentUser');
+                updateAuthUI();
+                navigate('home');
+            }
+        }
+
+        function updateAuthUI() {
+            if (state.currentUser) {
+                loginLink.classList.add('hidden');
+                logoutLink.classList.remove('hidden');
+                navbarAvatar.src = state.currentUser.avatar;
+                navbarAvatar.classList.remove('hidden');
+                
+                profileName.textContent = state.currentUser.name;
+                profileUsername.textContent = `@${state.currentUser.username}`;
+                profileAvatar.src = state.currentUser.avatar;
+                solvedCount.textContent = state.currentUser.solved;
+                rank.textContent = `#${state.currentUser.rank}`;
+                profileBio.textContent = state.currentUser.bio;
+            } else {
+                loginLink.classList.remove('hidden');
+                logoutLink.classList.add('hidden');
+                navbarAvatar.classList.add('hidden');
+            }
+        }
+
+        function uploadAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file.');
+                    return;
+                }
+                
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Image size should be less than 2MB.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileAvatar.src = e.target.result;
+                    navbarAvatar.src = e.target.result;
+                    if (state.currentUser) {
+                        state.currentUser.avatar = e.target.result;
+                        localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function toggleBioEdit() {
+            bioEditor.classList.remove('hidden');
+            profileBio.classList.add('hidden');
+            editBioBtn.classList.add('hidden');
+            saveBioBtn.classList.remove('hidden');
+            bioEditor.value = profileBio.textContent;
+        }
+
+        function saveBio() {
+            const newBio = bioEditor.value;
+            profileBio.textContent = newBio;
+            bioEditor.classList.add('hidden');
+            profileBio.classList.remove('hidden');
+            editBioBtn.classList.remove('hidden');
+            saveBioBtn.classList.add('hidden');
+            
+            if (state.currentUser) {
+                state.currentUser.bio = newBio;
+                localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+            }
+        }
+
+        function renderProblems() {
+            problemsList.innerHTML = '';
+            state.problems.forEach(problem => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="problem__id">${problem.id}</td>
+                    <td>
+                        <a href="#" class="problem__title" onclick="viewProblem(${problem.id})">${problem.title}</a>
+                        ${problem.solved ? '<i class="fas fa-check-circle text-success ml-1"></i>' : ''}
+                    </td>
+                    <td>
+                        <span class="problem__difficulty problem__difficulty--${problem.difficulty}">
+                            ${problem.difficulty.charAt(0).toUpperCase() + problem.difficulty.slice(1)}
+                        </span>
+                    </td>
+                    <td>${problem.acceptance}</td>
+                    <td>${problem.solved ? 'Yes' : 'No'}</td>
+                `;
+                problemsList.appendChild(row);
             });
         }
 
-        async function fetchWithErrorHandling(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                return await response.json();
-            } catch (error) {
-                showMessage(`Error: ${error.message}`, 'error');
-                console.error('Fetch error:', error);
-                return null;
+        function viewProblem(id) {
+            const problem = state.problems.find(p => p.id === id);
+            if (problem) {
+                alert(`Problem: ${problem.title}\nDifficulty: ${problem.difficulty}\nAcceptance Rate: ${problem.acceptance}`);
+                
+                if (confirm('Would you like to solve this problem now?')) {
+                    if (!state.currentUser) {
+                        alert('Please login to solve problems');
+                        navigate('login');
+                        return;
+                    }
+                    const problemSelect = document.getElementById('problemSelect');
+                    problemSelect.value = problem.id;
+                    editorProblemTitle.textContent = `${problem.id}. ${problem.title}`;
+                    navigate('submit');
+                }
             }
         }
 
-        async function fetchProblems() {
-            toggleSpinner(true);
-            const problems = await fetchWithErrorHandling(`${API_BASE_URL}/problems`);
-            if (!problems) return;
-
-            const problemList = document.getElementById('problem-list');
-            problemList.innerHTML = problems.map(problem => `
-                <li class="list__item" role="listitem">
-                    <span>${problem.title} - <em>${problem.difficulty}</em></span>
-                    <button class="button button--small" onclick="viewProblem('${problem.id}')">View</button>
-                </li>
-            `).join('');
-            toggleSpinner(false);
-        }
-
-        async function fetchLeaderboard() {
-            toggleSpinner(true);
-            const leaderboard = await fetchWithErrorHandling(`${API_BASE_URL}/leaderboard`);
-            if (!leaderboard) return;
-
-            const leaderboardList = document.getElementById('leaderboard-list');
-            leaderboardList.innerHTML = leaderboard.map((user, index) => `
-                <li class="list__item" role="listitem">
-                    <span>${index + 1}. ${user.username}</span>
-                    <span>${user.score} points</span>
-                </li>
-            `).join('');
-            toggleSpinner(false);
-        }
-
-        async function submitCode() {
-            const code = document.getElementById('code-area').value.trim();
-            if (!code) return showMessage('Please enter some code before submitting.', 'error');
-
-            toggleSpinner(true);
-            try {
-                const response = await fetch(`${API_BASE_URL}/submit`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code })
-                });
-                
-                const result = await response.json();
-                if (!response.ok) throw new Error(result.message || 'Submission failed');
-                
-                showMessage(result.message, 'success');
-                document.getElementById('code-area').value = '';
-            } catch (error) {
-                showMessage(error.message, 'error');
-            } finally {
-                toggleSpinner(false);
+        function renderSubmissions() {
+            submissionsList.innerHTML = '';
+            
+            if (state.submissions.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="4" class="text-center py-4 text-gray-500">No submissions yet</td>`;
+                submissionsList.appendChild(row);
+                return;
             }
+            
+            state.submissions.forEach(sub => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><a href="#" class="problem__title" onclick="viewProblem(${sub.problemId})">${sub.title}</a></td>
+                    <td>
+                        <span class="${sub.status === 'Accepted' ? 'text-success' : 'text-danger'}">
+                            <i class="fas ${sub.status === 'Accepted' ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                            ${sub.status}
+                        </span>
+                    </td>
+                    <td>${sub.language}</td>
+                    <td>${sub.date}</td>
+                `;
+                submissionsList.appendChild(row);
+            });
         }
 
-        function showMessage(message, type = 'info') {
-            const statusEl = document.getElementById('status-message');
-            statusEl.textContent = message;
-            statusEl.className = `status-message status-message--${type}`;
-            setTimeout(() => statusEl.classList.remove('status-message--success', 'status-message--error'), 5000);
+        function populateProblemSelect() {
+            problemSelect.innerHTML = '<option value="">-- Select a problem --</option>';
+            state.problems.forEach(problem => {
+                const option = document.createElement('option');
+                option.value = problem.id;
+                option.textContent = `${problem.id}. ${problem.title}`;
+                problemSelect.appendChild(option);
+            });
         }
 
-        function toggleSpinner(show) {
-            document.getElementById('spinner').style.display = show ? 'block' : 'none';
+        function submitSolution() {
+            const problemId = problemSelect.value;
+            const language = document.getElementById('languageSelect').value;
+            const code = document.getElementById('code-editor').value;
+            
+            if (!problemId) {
+                alert('Please select a problem.');
+                return;
+            }
+            
+            if (!code.trim()) {
+                alert('Please write some code before submitting.');
+                return;
+            }
+            
+            const problem = state.problems.find(p => p.id == problemId);
+            const status = Math.random() > 0.5 ? 'Accepted' : 'Wrong Answer';
+            
+            const submission = {
+                problemId: problemId,
+                title: problem.title,
+                status: status,
+                language: language.charAt(0).toUpperCase() + language.slice(1),
+                date: new Date().toLocaleDateString()
+            };
+            
+            state.submissions.unshift(submission);
+            
+            if (status === 'Accepted' && !problem.solved) {
+                problem.solved = true;
+                if (state.currentUser) {
+                    state.currentUser.solved++;
+                    solvedCount.textContent = state.currentUser.solved;
+                    localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+                    
+                    if (state.currentUser.rank > 1) {
+                        state.currentUser.rank--;
+                        rank.textContent = `#${state.currentUser.rank}`;
+                    }
+                }
+            }
+            
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `fixed top-4 right-4 p-4 rounded-md shadow-md ${
+                status === 'Accepted' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+            }`;
+            resultDiv.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${status === 'Accepted' ? 'fa-check-circle' : 'fa-times-circle'} mr-2"></i>
+                    <span>Submission Result: ${status}</span>
+                </div>
+            `;
+            document.body.appendChild(resultDiv);
+            
+            setTimeout(() => {
+                resultDiv.remove();
+            }, 3000);
+            
+            renderSubmissions();
+            renderProblems();
+            updateLeaderboard();
         }
 
-        // Initialize the application
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchProblems();
-            fetchLeaderboard();
-            showPage('home');
+        function clearEditor() {
+            document.getElementById('code-editor').value = '';
+        }
+
+        function updateLeaderboard() {
+            state.leaderboard = [...state.users]
+                .sort((a, b) => b.solved - a.solved || a.rank - b.rank)
+                .map((user, index) => ({
+                    ...user,
+                    rank: index + 1
+                }));
+            
+            renderLeaderboard();
+        }
+
+        function renderLeaderboard() {
+            leaderboardList.innerHTML = '';
+            
+            state.leaderboard.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="leaderboard-rank">${user.rank}</td>
+                    <td>
+                        <div class="leaderboard-user">
+                            <img src="${user.avatar}" class="leaderboard-avatar">
+                            <span>${user.username}</span>
+                        </div>
+                    </td>
+                    <td>${user.solved}</td>
+                    <td>${user.solved * 10}</td>
+                `;
+                leaderboardList.appendChild(row);
+            });
+        }
+
+        problemSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = problemsList.querySelectorAll('tr');
+            
+            rows.forEach(row => {
+                const title = row.querySelector('.problem__title').textContent.toLowerCase();
+                row.style.display = title.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        problemSelect.addEventListener('change', function() {
+            const problemId = this.value;
+            if (problemId) {
+                const problem = state.problems.find(p => p.id == problemId);
+                editorProblemTitle.textContent = `${problem.id}. ${problem.title}`;
+            } else {
+                editorProblemTitle.textContent = 'No problem selected';
+            }
+        });
+
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            document.getElementById('editorLanguage').value = this.value;
+        });
+
+        document.getElementById('editorLanguage').addEventListener('change', function() {
+            document.getElementById('languageSelect').value = this.value;
+        });
+
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            const language = this.value;
+            const editor = document.getElementById('code-editor');
+            
+            if (!editorProblemTitle.textContent.includes('No problem') && editor.value === '') {
+                switch(language) {
+                    case 'cpp':
+                        editor.value = `#include <iostream>\nusing namespace std;\n\nint main() {\n    // Your code here\n    return 0;\n}`;
+                        break;
+                    case 'java':
+                        editor.value = `public class Main {\n    public static void main(String[] args) {\n        // Your code here\n    }\n}`;
+                        break;
+                    case 'python':
+                        editor.value = `# Your code here`;
+                        break;
+                    case 'javascript':
+                        editor.value = `// Your code here`;
+                        break;
+                }
+            }
         });
     </script>
 </body>
